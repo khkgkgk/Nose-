@@ -1,0 +1,17 @@
+name: build
+on: [push, workflow_dispatch]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: 21 }
+      - uses: gradle/actions/setup-gradle@v4
+        with: { gradle-version: 8.12 }
+      - run: unzip -q delight-extras-fabric-1.21.1.zip
+      - run: cd delight-extras && gradle build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: delight-extras-jar
+          path: delight-extras/build/libs/*.jar
